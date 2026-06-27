@@ -41,6 +41,59 @@
     /* Service card line animation on hover */
     .service-card-title-wrap:hover .service-card-line { width: 100% !important; transition: width 0.4s ease; }
     .service-card-line { transition: width 0.4s ease; }
+
+    /* ===== SCROLL ANIMATIONS ===== */
+    .anim-fade-up {
+      opacity: 0;
+      transform: translateY(52px);
+      transition: opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1), transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .anim-fade-left {
+      opacity: 0;
+      transform: translateX(-52px);
+      transition: opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1), transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .anim-fade-right {
+      opacity: 0;
+      transform: translateX(52px);
+      transition: opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1), transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .anim-fade-in {
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .anim-scale-up {
+      opacity: 0;
+      transform: scale(0.87);
+      transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .anim-fade-up.in-view,
+    .anim-fade-left.in-view,
+    .anim-fade-right.in-view,
+    .anim-fade-in.in-view,
+    .anim-scale-up.in-view {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Rotating arc badge */
+    @keyframes spin-badge { to { transform: rotate(360deg); } }
+    .arc-text-image { animation: spin-badge 18s linear infinite; transform-origin: center; }
+
+    /* Navbar logo — default: white (over dark hero) */
+    .nav-logo-black { display: none; }
+    .social-icon-wrap-black { display: none; }
+
+    /* Navbar scrolled */
+    .navbar-section { transition: background 0.35s ease, box-shadow 0.35s ease; }
+    .navbar-scrolled { background: #fff !important; box-shadow: 0 2px 24px rgba(0,0,0,0.09) !important; }
+    .navbar-scrolled .nav-logo { display: none; }
+    .navbar-scrolled .nav-logo-black { display: block; }
+    .navbar-scrolled .social-icon-wrap { display: none; }
+    .navbar-scrolled .social-icon-wrap-black { display: flex; }
+    .navbar-scrolled .single-nav,
+    .navbar-scrolled .text-block-5,
+    .navbar-scrolled .dropdown-icon { color: #1a1a1a !important; }
   </style>
 </head>
 
@@ -1513,6 +1566,137 @@
       }
     }
   </style>
+
+  <!-- ===== ANIMATION ENGINE ===== -->
+  <script>
+  (function () {
+    function prep(el, cls, delay) {
+      if (!el) return;
+      el.classList.add(cls);
+      if (delay) el.style.transitionDelay = delay + 'ms';
+    }
+    function stagger(list, cls, gap, start) {
+      list.forEach(function (el, i) {
+        el.classList.add(cls);
+        el.style.transitionDelay = ((start || 0) + i * gap) + 'ms';
+      });
+    }
+
+    /* ---- tag every element with its animation class ---- */
+
+    // HERO — entrance on load
+    prep(document.querySelector('.hero-title-text'),                     'anim-fade-up',    0);
+    prep(document.querySelector('.hero-pg'),                             'anim-fade-up',  140);
+    prep(document.querySelector('.hero-top-content > .primary-button'),  'anim-fade-up',  260);
+    prep(document.querySelector('.hero-rating-area'),                    'anim-fade-up',  380);
+    prep(document.querySelector('.hero-image-wrapper'),                  'anim-fade-in',   80);
+
+    // ABOUT
+    prep(document.querySelector('.about-section-title-wrapper'),                   'anim-fade-up',    0);
+    prep(document.querySelector('.about-image-v1'),                                'anim-fade-left', 120);
+    prep(document.querySelector('.about-text-content'),                            'anim-fade-up',  200);
+    stagger(document.querySelectorAll('.about-counter-card'),                      'anim-scale-up', 140, 250);
+    prep(document.querySelector('.about-section-left-content .border-button'),     'anim-fade-up',  380);
+    prep(document.querySelector('.right-image-list'),                              'anim-fade-right',160);
+
+    // SERVICES
+    prep(document.querySelector('.service-top-content'),    'anim-fade-up',   0);
+    prep(document.querySelector('.service-cta-area'),       'anim-fade-up',  60);
+    ['.collection-list-wrapper', '.collection-list-wrapper-02',
+     '.collection-list-wrapper-03', '.collection-list-wrapper-04'
+    ].forEach(function (sel, i) { prep(document.querySelector(sel), 'anim-fade-left', i * 110); });
+    prep(document.querySelector('.service-image-wrapper'),  'anim-scale-up', 80);
+
+    // WORK PROCESS
+    stagger(document.querySelectorAll('.work-card'), 'anim-fade-up', 160, 0);
+
+    // WHY CHOOSE
+    prep(document.querySelector('.why-choose-section-title-pg'),              'anim-fade-left',  0);
+    stagger(document.querySelectorAll('.why-choose-check-feature'),           'anim-fade-left', 110, 120);
+    prep(document.querySelector('.arc-wrapper'),                              'anim-scale-up', 260);
+    prep(document.querySelector('.why-choose-image-01'),                      'anim-fade-right',  80);
+    prep(document.querySelector('.why-choose-image-02'),                      'anim-fade-right', 240);
+
+    // AWARDS
+    prep(document.querySelector('.awards-content-wrapper .all-section-title-wrapper'), 'anim-fade-up', 0);
+    stagger(document.querySelectorAll('.awards-card'), 'anim-fade-up', 90, 60);
+
+    // FULL-WIDTH IMAGE
+    prep(document.querySelector('.image-section img'), 'anim-scale-up', 0);
+
+    // BEFORE / AFTER
+    prep(document.querySelector('.after-befote-left-content'),        'anim-fade-left',  0);
+    prep(document.querySelector('.after-before-image-tab-list'),      'anim-fade-up',   80);
+    stagger(document.querySelectorAll('.after-before-image-wrapper'), 'anim-fade-up',  120, 160);
+
+    // TESTIMONIALS
+    stagger(document.querySelectorAll('.testimonials-card'), 'anim-fade-up', 90, 0);
+
+    // BENEFITS
+    prep(document.querySelector('.benefits-befote-left-content'), 'anim-fade-left',   0);
+    prep(document.querySelector('.benefits-image-wrapper'),        'anim-fade-right', 140);
+
+    // FAQ
+    prep(document.querySelector('.faq-section .all-section-title-wrapper'), 'anim-fade-up', 0);
+    stagger(document.querySelectorAll('.faq-item'), 'anim-fade-up', 80, 80);
+
+    // BLOG
+    prep(document.querySelector('.blog-left-content'), 'anim-fade-left', 0);
+    stagger(document.querySelectorAll('.blog-collection .collection-item'), 'anim-fade-up', 150, 60);
+
+    // FOOTER
+    prep(document.querySelector('.footer-cta'),            'anim-fade-up',    0);
+    prep(document.querySelector('.footer-left-content'),   'anim-fade-left',  60);
+    prep(document.querySelector('.footer-right-content'),  'anim-fade-right', 60);
+    prep(document.querySelector('.copyright-area'),        'anim-fade-up',    80);
+
+    /* ---- IntersectionObserver ---- */
+    if (!window.IntersectionObserver) {
+      document.querySelectorAll('.anim-fade-up,.anim-fade-left,.anim-fade-right,.anim-fade-in,.anim-scale-up')
+        .forEach(function (el) { el.classList.add('in-view'); });
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.anim-fade-up,.anim-fade-left,.anim-fade-right,.anim-fade-in,.anim-scale-up')
+      .forEach(function (el) { io.observe(el); });
+
+    /* ---- Counter animation ---- */
+    function runCounter(el) {
+      var raw = el.textContent.trim();
+      var isK   = /k/i.test(raw);
+      var plus  = raw.includes('+');
+      var target = parseInt(raw.replace(/\D/g, ''), 10);
+      var dur = 1800, t0 = null;
+      (function tick(ts) {
+        if (!t0) t0 = ts;
+        var p   = Math.min((ts - t0) / dur, 1);
+        var val = Math.round((1 - Math.pow(1 - p, 3)) * target);
+        el.textContent = val + (isK ? 'k' : '') + (plus ? '+' : '');
+        if (p < 1) requestAnimationFrame(tick);
+      })(performance.now());
+    }
+
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { runCounter(e.target); cio.unobserve(e.target); } });
+    }, { threshold: 0.6 });
+    document.querySelectorAll('.counter-text').forEach(function (el) { cio.observe(el); });
+
+    /* ---- Navbar scroll ---- */
+    var navbar = document.querySelector('.navbar-section');
+    if (navbar) {
+      window.addEventListener('scroll', function () {
+        navbar.classList.toggle('navbar-scrolled', window.scrollY > 80);
+      }, { passive: true });
+    }
+
+  }());
+  </script>
 
 </body>
 </html>
